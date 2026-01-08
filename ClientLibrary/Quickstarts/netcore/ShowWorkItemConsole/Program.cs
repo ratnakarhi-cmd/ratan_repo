@@ -1,30 +1,4 @@
-# .NET samples for Azure DevOps
-
-[![Build Status](https://dev.azure.com/ms/azure-devops-dotnet-samples/_apis/build/status/Microsoft.azure-devops-dotnet-samples?branchName=main)](https://dev.azure.com/ms/azure-devops-dotnet-samples/_build/latest?definitionId=82&branchName=main)
-
-This repository contains C# samples that show how to integrate with  Azure DevOps Services and Azure using our [public client libraries](https://www.nuget.org/profiles/nugetvss), service hooks, and more.
-
-## Explore the samples
-
-Take a minute to explore the repo. It contains short as well as longer examples that demonstrate how to integrate with Azure DevOps Services and Azure DevOps Server. 
-
-In the ClientLibrary folder, you'll find the following:
-
-* **Samples**: short reusable code blocks demonstrating how to call specific APIs.
-* **Quickstarts**: self-contained programs demonstrating a specific scenario, typically by calling multiple APIs.
-
-## About the official client libraries
-
-For .NET developers, the primary (and highly recommended) way to integrate with Azure DevOps Services and Azure DevOps Server is via our public .NET client libraries available on Nuget. [Microsoft.TeamFoundationServer.Client](https://www.nuget.org/packages/Microsoft.TeamFoundationServer.Client) is the most popular Nuget package and contains clients for interacting with work item tracking, Git, version control, build, release management and other services.
-
-See the [Azure DevOps client library documentation](https://docs.microsoft.com/en-us/azure/devops/integrate/concepts/dotnet-client-libraries?view=vsts) for more details.
-
-### Sample console program
-
-Simple console program that connects to Azure DevOps using a personal access token and displays the field values of a work item.
-
-```cs
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
@@ -83,8 +57,3 @@ namespace ConsoleApp
         }
     }
 }
-```
-
-## Request other samples
-
-Not finding a sample that demonstrates something you are trying to do? Let us know by opening an issue.
