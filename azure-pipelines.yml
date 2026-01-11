@@ -1,4 +1,3 @@
-
 trigger:
   branches:
     include:
@@ -25,30 +24,26 @@ stages:
     # Step 1: Install .NET SDK
     - task: UseDotNet@2
       inputs:
-        packageType: 'sdk'
+        packageType: sdk
         version: $(dotnetVersion)
 
     # Step 2: Restore
     - script: dotnet restore $(projectPath)
-      displayName: 'Restore NuGet packages'
+      displayName: Restore NuGet packages
 
     # Step 3: Build
     - script: dotnet build $(projectPath) --configuration $(buildConfiguration)
-      displayName: 'Build application'
+      displayName: Build application
 
     # Step 4: Publish
-    - script: dotnet publish $(projectPath) \
-        --configuration $(buildConfiguration) \
-        --output $(Build.ArtifactStagingDirectory)
-      displayName: 'Publish application'
+    - script: dotnet publish $(projectPath) --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)
+      displayName: Publish application
 
     # Step 5: Publish Artifact
-    - task: PublishBuildArtifacts@1
+    - task: PublishPipelineArtifact@1
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: $(artifactName)
-
----
+        targetPath: '$(Build.ArtifactStagingDirectory)'
+        artifact: $(artifactName)
 
 - stage: Deploy
   displayName: Deploy Stage
@@ -58,10 +53,10 @@ stages:
     steps:
 
     # Step 6: Download Artifact
-    - task: DownloadBuildArtifacts@0
+    - task: DownloadPipelineArtifact@2
       inputs:
-        artifactName: $(artifactName)
-        downloadPath: $(System.DefaultWorkingDirectory)
+        artifact: $(artifactName)
+        path: '$(System.DefaultWorkingDirectory)/$(artifactName)'
 
     # Step 7: Deploy to Azure App Service
     - task: AzureWebApp@1
@@ -69,4 +64,3 @@ stages:
         azureSubscription: $(azureSubscription)
         appName: $(appName)
         package: '$(System.DefaultWorkingDirectory)/$(artifactName)'
-cdf-uopd-tbw
