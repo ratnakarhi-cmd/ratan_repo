@@ -13,7 +13,7 @@ variables:
   projectPath: 'ClientLibrary/Samples/ClientSamples.netcore.csproj'
   artifactName: 'drop'
   appName: 'my-dotnet-appservice'
-  azureSubscription: 'azure-appservice-conn'
+  azureSubscription: 'new-app-connection'
 
 stages:
 - stage: Build
