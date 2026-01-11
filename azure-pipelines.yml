@@ -1,22 +1,72 @@
+
+trigger:
+  branches:
+    include:
+      - main
+
 pool:
-  vmImage: vs2017-win2016
+  vmImage: 'windows-latest'
 
 variables:
-  solution: './ClientLibrary/Samples/ClientSamples.sln'
-  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  dotnetVersion: '8.0.x'
+  projectPath: 'ClientLibrary/Samples/ClientSamples.netcore.csproj'
+  artifactName: 'drop'
+  appName: 'my-dotnet-appservice'
+  azureSubscription: 'azure-appservice-conn'
 
-steps:
-- task: NuGetToolInstaller@0
+stages:
+- stage: Build
+  displayName: Build Stage
+  jobs:
+  - job: BuildJob
+    steps:
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+    # Step 1: Install .NET SDK
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: $(dotnetVersion)
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    # Step 2: Restore
+    - script: dotnet restore $(projectPath)
+      displayName: 'Restore NuGet packages'
 
+    # Step 3: Build
+    - script: dotnet build $(projectPath) --configuration $(buildConfiguration)
+      displayName: 'Build application'
+
+    # Step 4: Publish
+    - script: dotnet publish $(projectPath) \
+        --configuration $(buildConfiguration) \
+        --output $(Build.ArtifactStagingDirectory)
+      displayName: 'Publish application'
+
+    # Step 5: Publish Artifact
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: $(artifactName)
+
+---
+
+- stage: Deploy
+  displayName: Deploy Stage
+  dependsOn: Build
+  jobs:
+  - job: DeployJob
+    steps:
+
+    # Step 6: Download Artifact
+    - task: DownloadBuildArtifacts@0
+      inputs:
+        artifactName: $(artifactName)
+        downloadPath: $(System.DefaultWorkingDirectory)
+
+    # Step 7: Deploy to Azure App Service
+    - task: AzureWebApp@1
+      inputs:
+        azureSubscription: $(azureSubscription)
+        appName: $(appName)
+        package: '$(System.DefaultWorkingDirectory)/$(artifactName)'
+cdf-uopd-tbw
