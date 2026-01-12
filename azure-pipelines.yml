@@ -4,7 +4,9 @@ trigger:
       - main
 
 pool:
-  vmImage: 'windows-latest'
+ name: new-agent-pool
+ demands:
+   - Agent.OS -equals new-agent-pool
 
 variables:
   buildConfiguration: 'Release'
