@@ -4,9 +4,9 @@ trigger:
       - main
 
 pool:
- name: new-agent-pool
- demands:
-   - Agent.OS -equals new-agent-pool
+ name: vm-ratan
+ # demands:
+   # - Agent.OS -equals new-agent-pool
 
 variables:
   buildConfiguration: 'Release'
