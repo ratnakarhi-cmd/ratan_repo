@@ -3,8 +3,8 @@ trigger:
     include:
       - main
 
-pool:
- name: vm-ratan
+pool:vm-ratan
+ # name: vm-ratan
  # demands:
    # - Agent.OS -equals new-agent-pool
 
